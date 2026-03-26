@@ -1,0 +1,11 @@
+{
+  "id": "VulnCheck",
+  "name": "VulnCheck",
+  "author": "Tybop",
+  "description": "Slay the Spire 2 mod that checks for vulnerable and other helpful affects in your teams hand.",
+  "version": "v0.0.0",
+  "has_pck": true,
+  "has_dll": true,
+  "dependencies": ["BaseLib"],
+  "affects_gameplay": false
+}
