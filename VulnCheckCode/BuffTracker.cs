@@ -335,6 +335,7 @@ public partial class BuffTracker
 
                 // TODO TB So I was looking into grabbing and logging the canonical vars here but....
                 // TODO it looks like canonical vars is protected on the card class with no getter available
+                // TODO TBH should probably be using the DynamicVars now that I'm looking at this more
                 
                 var method = cardObj.GetType().GetMethod("GetDescriptionForPile");
                 if (method != null)

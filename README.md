@@ -1,6 +1,6 @@
 Initial ideas:
 - Two main efforts
-  - Get vuln power off cards by checking canonical vars
+  - Get vuln power off cards by checking dynamic vars
     - Initially check on draw for testing
     - Once validated add startup list generation checking cards and adding to list
       - Once generated make it so that we don't rescan cards already added
