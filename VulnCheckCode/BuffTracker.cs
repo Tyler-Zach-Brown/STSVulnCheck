@@ -1,4 +1,5 @@
-﻿using MegaCrit.Sts2.Core.Modding;
+﻿using MegaCrit.Sts2.Core.Logging;
+using MegaCrit.Sts2.Core.Modding;
 
 namespace VulnCheck.VulnCheckCode;
 
@@ -329,13 +330,17 @@ public partial class BuffTracker
             try
             {
                 var pile = tCard.Property("Pile").GetValue();
+                var dynamicVars = tCard.Property("DynamicVars").GetValue();
+                var cardName = "GET CARD NAME";
                 object? pileTypeEnum = null;
                 if (pile != null)
                     pileTypeEnum = Traverse.Create(pile).Property("PileType").GetValue();
 
-                // TODO TB So I was looking into grabbing and logging the canonical vars here but....
-                // TODO it looks like canonical vars is protected on the card class with no getter available
-                // TODO TBH should probably be using the DynamicVars now that I'm looking at this more
+                var hasVuln = false;
+                if (dynamicVars != null)
+                    hasVuln = Traverse.Create(dynamicVars).Property("Vulnerable").GetValue() != null;
+                
+                ModLog.Info("Card" + cardName + " has vuln: " + hasVuln);
                 
                 var method = cardObj.GetType().GetMethod("GetDescriptionForPile");
                 if (method != null)
