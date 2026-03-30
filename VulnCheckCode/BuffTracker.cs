@@ -1,4 +1,6 @@
-﻿namespace VulnCheck.VulnCheckCode;
+﻿using MegaCrit.Sts2.Core.Modding;
+
+namespace VulnCheck.VulnCheckCode;
 
 using Godot;
 using MegaCrit.Sts2.Core.Combat;
@@ -18,7 +20,7 @@ using System.Text.RegularExpressions;
 /// <summary>
 /// Panel that shows available buffs and debuffs in players hands for multiplayer coordination
 /// </summary>
-public static class BuffTracker
+public partial class BuffTracker
 {
     // Set > 0 to duplicate the local player's hand N times for testing layout.
     public static int DebugDuplicatePlayers = 0;
@@ -31,6 +33,7 @@ public static class BuffTracker
     // Pagination
     private static int _currentPage;
     private const int PlayersPerPage = 4;
+    private static bool showTracker = true;
 
     // Persisted position across show/hide
     private static Vector2? _savedPosition;
@@ -74,7 +77,7 @@ public static class BuffTracker
 
     private static void Show()
     {
-        if (!ModSettings.ShowTeammateHand) return;
+        if (!showTracker) return;
 
         var combat = CombatManager.Instance;
         if (combat == null) return;
@@ -330,6 +333,9 @@ public static class BuffTracker
                 if (pile != null)
                     pileTypeEnum = Traverse.Create(pile).Property("PileType").GetValue();
 
+                // TODO TB So I was looking into grabbing and logging the canonical vars here but....
+                // TODO it looks like canonical vars is protected on the card class with no getter available
+                
                 var method = cardObj.GetType().GetMethod("GetDescriptionForPile");
                 if (method != null)
                 {
@@ -412,7 +418,7 @@ public static class BuffTracker
     /// Main panel that handles dragging (via _Input for reliability) and
     /// click-outside-to-close behavior.
     /// </summary>
-    private class HandPanel : PanelContainer { }
+    private partial class HandPanel : PanelContainer { } // TODO Added partial to this to get it to build but not sure why it needs it tbh
 
     // Drag/click-outside state — driven from InputPatch
     private static bool _dragging;
@@ -433,16 +439,8 @@ public static class BuffTracker
 
             if (mb.Pressed)
             {
-                if (rect.HasPoint(mousePos))
-                {
-                    _dragging = true;
-                    _dragOffset = mousePos - _panel.Position;
-                }
-                else if (!SettingsMenu.IsPointInPanel(mousePos))
-                {
-                    _dragging = false;
-                    Hide();
-                }
+                _dragging = true;
+                _dragOffset = mousePos - _panel.Position;
             }
             else
             {
@@ -807,7 +805,7 @@ public static class BuffTracker
     /// <summary>
     /// Card container that uses the game's native NHoverTipSet tooltip system.
     /// </summary>
-    private class CardPanel : PanelContainer
+    private partial class CardPanel : PanelContainer
     {
         public string CardName = "";
         public string CardDescription = "";
