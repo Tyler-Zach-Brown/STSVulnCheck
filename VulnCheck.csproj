@@ -23,10 +23,16 @@
 
     <!-- Windows -->
     <PropertyGroup Condition="'$(IsWindows)' == 'true'">
-        <AutoSteamPath>D:/SteamLibrary/steamapps</AutoSteamPath>
-        <SteamLibraryPath Condition="Exists('$(AutoSteamPath)/common/Slay the Spire 2')">$(AutoSteamPath)</SteamLibraryPath>
+        <TylerSteamPath>D:/SteamLibrary/steamapps</TylerSteamPath>
+        <BertoSteamPath>C:/SteamLibrary/steamapps</BertoSteamPath>
+        <SteamLibraryPath Condition="Exists('$(TylerSteamPath)/common/Slay the Spire 2')">$(TylerSteamPath)</SteamLibraryPath>
+        <SteamLibraryPath Condition="Exists('$(BertoSteamPath)/common/Slay the Spire 2')">$(BertoSteamPath)</SteamLibraryPath>
+        
+        <TylerGodotPath>C:/Users/Tybop/Desktop/megadot/MegaDot_v4.5.1-stable_mono_win64.exe</TylerGodotPath>
+        <BertoGodotPath>temp</BertoGodotPath>
+        <GodotPath Condition="Exists('$(TylerGodotPath)')">$(TylerGodotPath)</GodotPath>
+        <GodotPath Condition="Exists('$(BertoGodotPath)')">$(BertoGodotPath)</GodotPath>
 
-        <GodotPath>C:/Users/Tybop/Desktop/megadot/MegaDot_v4.5.1-stable_mono_win64.exe</GodotPath>
         <!-- If on Windows and Slay the Spire 2 is not installed in your default steam library, adjust the following.-->
         <SteamLibraryPath Condition="'$(SteamLibraryPath)' == ''">C:/Program Files (x86)/Steam/steamapps</SteamLibraryPath>
 
@@ -105,6 +111,10 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="README.md" />
     </ItemGroup>
 
     <Target Name="CheckDependencyPaths">
