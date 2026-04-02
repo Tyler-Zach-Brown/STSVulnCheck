@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 
 namespace VulnCheck.VulnCheckCode;
@@ -11,16 +13,30 @@ namespace VulnCheck.VulnCheckCode;
 /// </summary>
 
 
-[HarmonyPatch(typeof(CardPileCmd), nameof(CardPileCmd.Draw))]
+[HarmonyPatch]
 class BuffTracker
 {
-    static IEnumerable<CardModel> Postfix(IEnumerable<CardModel> cards)
+    [HarmonyPatch(typeof(CardPileCmd), nameof(CardPileCmd.Draw))]
+    [HarmonyPatch([typeof(PlayerChoiceContext), typeof(Decimal), typeof(Player), typeof(bool)])]
+    [HarmonyPostfix]
+    static async void GetCardBuffs(Task<IEnumerable<CardModel>> __result)
     {
-        var buffCards = cards.Where(c => c.DynamicVars.Vulnerable.BaseValue > 0);
-        foreach (var cardModel in buffCards)
+        try
         {
-            MainFile.Logger.Info("Found vuln: " + cardModel.Title);
+            await __result;
+            var buffCards = __result.Result;
+            foreach (var card in buffCards)
+            {
+                try
+                {
+                    if (card.DynamicVars.Vulnerable.BaseValue > 0)
+                        MainFile.Logger.Info("Found vuln: " + card.Title);
+                } catch (KeyNotFoundException) {/* Do nothing if vuln not found */}
+            }
         }
-        return cards;
+        catch (Exception ex)
+        {
+            MainFile.Logger.Error("oopsie: " + ex);
+        }
     }
 }
