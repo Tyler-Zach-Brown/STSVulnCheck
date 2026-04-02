@@ -5,6 +5,7 @@ Initial ideas:
     - Once validated add startup list generation checking cards and adding to list
       - Once generated make it so that we don't rescan cards already added
       - Side note on this will it be faster to look at an attribute on a card or do a lookup of the card in a list?
+      - Shifting to this mod as template https://github.com/erasels/Minty-Spire-2/blob/main/src/AscHoverTooltips.cs
   - Add UI element showing Vuln in hand
     - little window to allow for toggling? (F keys)
     - https://alchyr.github.io/BaseLib-Wiki/docs/utilities/config-advanced.html
@@ -16,6 +17,7 @@ Initial ideas:
     - Weak
     - Team card draw/energy
     - Enemy strength loss
+    - Team Double Damage
   - Add Number of times power applied
   - Add mod config to allow toggling of window
     - Toggle powers searched for

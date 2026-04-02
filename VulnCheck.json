@@ -4,7 +4,7 @@
   "author": "G4D_LLC",
   "description": "Slay the Spire 2 mod that checks for vulnerable and other helpful affects in your teams hand.",
   "version": "v0.0.0",
-  "has_pck": true,
+  "has_pck": false,
   "has_dll": true,
   "dependencies": ["BaseLib"],
   "affects_gameplay": false
