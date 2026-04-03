@@ -22,3 +22,8 @@ Initial ideas:
   - Add mod config to allow toggling of window
     - Toggle powers searched for
     - Toggle potions on/off
+
+
+KNOWN ISSUES:
+- Uppercut is a little bitch and doesn't set vulnerable as a dynamicVar cause it hates me
+- Creating a card and adding it to your hand doesn't trigger the draw function either
