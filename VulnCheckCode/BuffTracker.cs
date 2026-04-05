@@ -2,6 +2,7 @@
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 
 namespace VulnCheck.VulnCheckCode;
@@ -12,18 +13,25 @@ namespace VulnCheck.VulnCheckCode;
 /// </summary>
 
 
-[HarmonyPatch]
+[HarmonyPatch(typeof(CardPileCmd), nameof(CardPileCmd.Draw))]
+[HarmonyPatch([typeof(PlayerChoiceContext), typeof(Decimal), typeof(Player), typeof(bool)])]
 class BuffTracker
 {
     
-    private static Dictionary<String, Func<CardModel, bool>> EnabledChecks = new();
+    //TODO Should be setting this dictionary up based off mod config settings
+    private static Dictionary<String, Func<CardModel, bool>> EnabledChecks = new Dictionary<string, Func<CardModel, bool>>(){{"Vuln", HasVuln}};
+    private static Player playerDrawing = null;
+
+    [HarmonyPrefix]
+    static void Prefix(Player player)
+    {
+        playerDrawing = player;
+    }
     
-    [HarmonyPatch(typeof(CardPileCmd), nameof(CardPileCmd.Draw))]
-    [HarmonyPatch([typeof(PlayerChoiceContext), typeof(Decimal), typeof(Player), typeof(bool)])]
+    
     [HarmonyPostfix]
     static async void GetCardBuffs(Task<IEnumerable<CardModel>> __result)
     {
-        EnabledChecks.Add("Vuln", HasVuln); // TODO move somewhere outside of this patch should be setting this when mod is configure/when run starts
         try
         {
             await __result;
@@ -35,6 +43,7 @@ class BuffTracker
                     if (func.Invoke(card))
                     {
                         MainFile.Logger.Info("Found " + buff);
+                        ThinkCmd.Play(new LocString("combat_messages", "VULN"), playerDrawing.Creature, 2.0);
                     }
                 }
             }
